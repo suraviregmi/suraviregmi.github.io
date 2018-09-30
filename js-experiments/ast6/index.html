@@ -2,24 +2,36 @@
 <html>
 
 <head>
-    <title></title>
+    <title>car game oop</title>
     <style type="text/css">
-    * {
-        padding: 0;
-        margin: 0;
+    body {
+        background-color: :black;
     }
 
-    canvas {
-        width: 500px;
-        height: 650px;
-        background-image: url("road.png");
+    #myCanvas {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        border-radius: 32px;
+        box-shadow: 0px 0px 32px rgba(225, 225, 0.5);
+    }
+
+    img {
+        display: none;
     }
     </style>
+    <img src="images/road.png" id="background">
+    <img src="images/car.png" id="car">
+    <img src="images/grey-car.png" id="greyCar">
 </head>
 
 <body>
-    <canvas id="myCanvas"></canvas>
-    <script type="text/javascript" src="script.js"></script>
+    <canvas width="500" , height="650" , id=myCanvas> </canvas>
+    <script type="text/javascript " src="js/player.js "></script>
+    <script type="text/javascript " src="js/obstacle.js "></script>
+    <script type="text/javascript " src="js/background.js "></script>
+    <script type="text/javascript " src="js/game.js "></script>
 </body>
 
 </html>
