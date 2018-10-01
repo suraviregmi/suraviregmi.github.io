@@ -9,6 +9,12 @@ function Car(x, y, w, h) {
 Car.prototype.draw = function() {
     //console.log("displat car");
     ctx.drawImage(car, this.x, this.y, this.w, this.h);
+    //ctx1.drawImage(car, this.x, this.y, this.w, this.h);
+    /*    ctx.beginPath();
+    ctx.rect(this.x, this.y, this.w, this.h);
+    ctx.fillStyle = "red";
+    ctx.fill();
+    ctx.closePath();*/
 };
 
 Car.prototype.update = function() {
@@ -33,22 +39,23 @@ Car.prototype.update = function() {
         }
     }
     //console.log("obstacle and canvas", obstacle.y);
-    if (obstacle.y >= 645) {
+    if (obstacle.y >= canvas.height - 10) {
         this.scored = false;
         //console.log("out of canvas");
     }
 };
 
 Car.prototype.moveLeft = function() {
-    console.log("this.x", this.x);
-    if (this.x > 80) {
-        this.x -= 40;
+    //console.log("this.x", this.x);
+    if (this.x > 50) {
+        this.x -= 75;
     }
 };
+
 Car.prototype.moveRight = function() {
-    console.log("this.x", this.x);
-    if (this.x < canvas.width - 80 - this.w) {
-        this.x += 40;
+    //console.log("this.x", this.x);
+    if (this.x < canvas.width - 50 - this.w) {
+        this.x += 75;
         //console.log("this.x", this.x);
     }
 };
