@@ -1,39 +1,44 @@
 let canvas = document.getElementById("myCanvas");
-let ctx = canvas.getContext('2d');
+
+const pipeTopHeight = 242;
+const pipeWidth = 52;
+const gap =100;
+const birdWidth = 40;
+const birdHeight = 40;
+const restartHeight = 75;
+const restartWidth  =214;
 
 
 //images
-let background = document.getElementById('background');
-let bird = document.getElementById('bird');
-let pipeTop = document.getElementById('pipeTop');
-let pipeBottom = document.getElementById('pipeBottom');
-let restart = document.getElementById('restart');
-let scoreCard = document.getElementById('score');
+let background = "images/background.png";
+let bird = "images/bird.png"
+let pipeTop = "images/pipeNorth.png"
+let pipeBottom = "images/pipeSouth.png"
+let restart = "images/restart.png"
+let scoreCard ="images/scoreboard.png"
 
 //
-let arr = 1;
+
 let pressed = false;
 let isPaused = true;
 let isGameOver = false;
-let pipeArray = [];
 let score = 0;
-
+let frameCounter = 0;
 //objects
-let player = new Bird(32, 240, 30, 40)
-let pipe = new Pipe(650, 0, 1)
-let background1 = new Background(0, 0, 650, 500, 1);
-let background2 = new Background(650, 0, 650, 500, 1);
 
 
-pipeArray.push(pipe);
+
 
 
 class Game {
-    constructor(ctx) {
-
+    constructor() {
+        this.ctx = canvas.getContext('2d');
         //declarations
         //console.log(" in constructor")
-        this.ctx = ctx;
+        this.pipeArray = [];
+        this.background1 = new Background(0, 0, 650, 500, 1,this.ctx);
+        this.background2 = new Background(650, 0, 650, 500, 1,this.ctx);
+        this.player = new Bird(32, 240, birdWidth,birdHeight,this.ctx);
 
 
     }
@@ -45,73 +50,136 @@ class Game {
         this.gameLoop();
     }
     gameLoop() {
-        //update and drawings
 
+        frameCounter++;
+        
+        //onkey press
+        if (pressed) {
+            this.player.moveUp(2);
+        }
 
-        //update
+        
+        //update and draw
         if (!isGameOver) {
-            background1.update();
-            background2.update();
-            player.update();
-            for (let i = 0; i < pipeArray.length; i++) {
-                pipeArray[i].update();
+            this.ctx.clearRect(0,0,canvas.width,canvas.height);
+            this.background1.draw();
+           this.background2.draw();
+            this.player.draw();
+            this.background1.update();
+            this.background2.update();
+            this.handleBottomCollision();
+            this.handlePipeCollison();
+            this.player.update();
+            
+            
+            for (let i = 0; i < this.pipeArray.length; i++) {
+                this.pipeArray[i].update();
+
+                this.pipeArray[i].draw();
+
+
+                if (this.pipeArray[i].x < -50)
+                    this.removePipe();
+            }
+
+
+            if (this.pipeArray.length < 3) {
+                if (frameCounter % 150 === 0) {
+                    this.createNewPipe();
+                }
             }
         }
+     
 
-        //draw
-        background1.draw();
-        background2.draw();
-        player.draw();
-        for (let i = 0; i < pipeArray.length; i++) {
-            pipeArray[i].draw();
-        }
 
         if (isGameOver) {
-            drawTint();
-            ctx.drawImage(restart, 250, 250)
+      
+            let restartImg = new Image();
+            restartImg.src = restart;   
+            this.ctx.drawImage(restartImg,250,250);
 
 
         }
 
-        ctx.drawImage(scoreCard, 250, 0)
-        drawText(+score, 200 + scoreCard.width, 100);
+        let scorecardImg = new Image();
+        scorecardImg.src = scoreCard;
+        this.ctx.drawImage(scorecardImg,250,0);
+
+        this.drawText(+score, 440, 90);
 
 
 
         window.requestAnimationFrame(this.gameLoop.bind(this));
     }
+
+    createNewPipe(){
+
+        this.pipeObj = new Pipe(canvas.width, Math.floor(Math.random() * 100) - 100, 1,this.ctx);
+        this.pipeArray.push(this.pipeObj);
+    
+    }
+    
+     removePipe(){
+        this.pipeArray.splice(0, 1);
+    }
+    handleBottomCollision(){
+        if(this.player.y + this.player.h >= 400)
+        {isGameOver =true;
+        }
+    }
+
+    handlePipeCollison(){
+        const bird = this.player;
+      
+      //  console.log('')
+        for (let i = 0; i < this.pipeArray.length; i++) {
+                    let p = this.pipeArray[i]
+                    if (bird.x + bird.w >= p.x && bird.x <= p.x + pipeWidth &&
+                        (bird.y <= p.y + pipeTopHeight || bird.y + bird.h >= p.y + pipeTopHeight + gap )
+                        ) {
+                        console.log("game over pipe")
+                        isGameOver = true;
+                    }
+        
+                    if ((bird.x > p.x + pipeWidth) && !bird.scored) {
+                        score++;
+                        bird.scored = true;
+                        console.log("scred", score)
+                    }
+        
+                    if (p.x + pipeWidth === bird.x) {
+                        bird.scored = false;
+                        // console.log("nt scoredr")
+                    }
+        
+               }
+    }
+
+    // and text
+ drawText(text, x, y){
+    this.ctx.font = 'bold 56px Comic Sans MS';
+    this.ctx.fillStyle = 'white';
+    this.ctx.textAlign = 'center';
+    this.ctx.lineWidth = 2;
+    this.ctx.strokeStyle = 'black';
+    this.ctx.fillStyle = 'white';
+    this.ctx.fillText(text, x, y);
+    this.ctx.strokeText(text, x, y);
 }
 
-//tint and text
-let drawText = (text, x, y) => {
-    ctx.font = 'bold 56px Comic Sans MS';
-    ctx.fillStyle = 'white';
-    ctx.textAlign = 'center';
-    ctx.lineWidth = 2;
-    ctx.strokeStyle = 'black';
-    ctx.fillStyle = 'white';
-    ctx.fillText(text, x, y);
-    ctx.strokeText(text, x, y);
+
 }
-
-//function for drawing tint on the screen 
-let drawTint = () => {
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-}
-
-
 
 //check for key press
 document.addEventListener('keydown', (e) => {
     if (e.keyCode === 32) {
         pressed = true;
-        player.moveUp(2);
         // console.log("pressed");
 
     }
 
 }, false);
+
 document.addEventListener('keyup', (e) => {
     if (e.keyCode === 32) {
         pressed = false;
@@ -122,7 +190,7 @@ document.addEventListener('keyup', (e) => {
 document.addEventListener('click', (e) => {
     const x = e.clientX;
     const y = e.clientY;
-    if (x > 250 && x < 250 + restart.width && y > 250 && y < 250 + restart.height) {
+    if (x > 250 && x < 250 + restartWidth && y > 250 && y < 250 + restartHeight) {
         console.log("cicked in restart")
         if (isGameOver) {
             window.location.reload();
@@ -131,16 +199,7 @@ document.addEventListener('click', (e) => {
 });
 
 
-let createNewPipe = () => {
 
-    pipeObj = 'pipe' + arr;
-    pipeObj = new Pipe(canvas.width, Math.floor(Math.random() * 100) - 100, 1);
-    pipeArray.push(pipeObj);
-
-}
-
-let removePipe = () => {
-    pipeArray.splice(0, 1);
-}
-const newGame = new Game(ctx);
+const newGame = new Game();
 newGame.init()
+

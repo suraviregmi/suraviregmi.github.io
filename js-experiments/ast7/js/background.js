@@ -1,21 +1,23 @@
-class Background{
-    constructor(x,y,w,h,speed){
+class Background {
+    constructor(x, y, w, h, speed,ctx) {
         this.x = x;
         this.y = y;
         this.w = w;
         this.h = h;
         this.speed = speed;
+        this.ctx = ctx;
     }
-  draw(){
-   
-      ctx.drawImage(background,this.x,this.y,this.w,this.h);
-     
-  }
-  update(){
-      this.x -= this.speed;
+    draw() {
+        let backgroundIMg = new Image();
+        backgroundIMg.src = background;
+        this.ctx.drawImage(backgroundIMg, this.x, this.y, this.w, this.h);
 
-      if(this.x<=-650){
-          this.x = 650;
-      }
-  }
+    }
+    update() {
+        this.x -= this.speed;
+
+        if (this.x <= -650) {
+            this.x = 650;
+        }
+    }
 }

@@ -1,32 +1,28 @@
 class Pipe {
 
-	constructor(x, y, speed) {
+	constructor(x, y, speed,ctx) {
 
 		this.x = x;
 		this.y = y;
 		this.speed = speed;
+		this.ctx = ctx;
+	
 	}
 
 	draw() {
-		for (let i = 0; i < pipeArray.length; i++) {
-			ctx.drawImage(pipeTop, pipeArray[i].x, pipeArray[i].y);
-			ctx.drawImage(pipeBottom, pipeArray[i].x, pipeArray[i].y + pipeTop.height + 100);
-		}
+	
+
+		let pipeTopImg = new Image();
+		pipeTopImg.src = pipeTop;
+		this.ctx.drawImage(pipeTopImg, this.x, this.y);
+		
+		let pipeBottomImg = new Image();
+        pipeBottomImg.src = pipeBottom;
+        this.ctx.drawImage(pipeBottomImg, this.x, this.y +pipeTopImg.height+100 );
 	}
 
 	update() {
-		for (let i = 0; i < pipeArray.length; i++) {
-			pipeArray[i].x -= 2;
-
-			if (pipeArray[i].x === 300) {
-				createNewPipe();
-			}
-
-			if (pipeArray[i].x === -50) {
-				removePipe();
-			}
-
-
-		}
+		this.x -= 2;
 	}
+
 }
