@@ -1,0 +1,11 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
+.clearfix {
+    overflow: auto;
+    clear: both;
+    content: "";
+    display: table;
+}

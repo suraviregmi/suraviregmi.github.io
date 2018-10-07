@@ -1,0 +1,73 @@
+.top-menu {
+    display: none;
+}
+
+.htu-right-wrapper {
+    width: 50%;
+}
+
+.htl-left span {
+    display: none;
+}
+
+
+
+.htl-left ul {
+    width: 100%;
+}
+
+.htl-left ul li {
+    width: 100%;
+    float: none;
+    text-align: center;
+}
+
+.first-wrapper {
+    display: none;
+}
+
+.left-column {
+    display: none;
+}
+
+
+
+
+.right-display {
+    width: 90%;
+}
+
+.first-row,
+.second-row,
+.third-row,
+.fourth-row {
+    margin-bottom: 0;
+}
+
+.individual {
+    margin: 10px 0;
+}
+
+.fourth-wrapper {
+    display: none;
+}
+
+.testimonial-entry {
+    width: 90%;
+    margin: 0 auto;
+    padding: 10px 5px;
+}
+
+.bottom-menu {
+    display: none;
+}
+
+.htl-left-wrapper {
+
+    border-right: none;
+}
+
+.htu-right-wrapper {
+
+    border-left: none;
+}
