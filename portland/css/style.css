@@ -47,6 +47,11 @@
             border: 2px solid #f0f2f7;
         }
 
+        .signin:hover {
+            color: #a1a8bd;
+        }
+
+
         .htl-left ul {
             float: left;
             font-size: 10px;
@@ -119,8 +124,10 @@
         }
 
         .select-top {
+            cursor: pointer;
             border: 0;
             font-size: 12px;
+            font-weight: bold;
             background-repeat: no-repeat;
             outline: none;
             background-color: #ffffff;
@@ -239,6 +246,8 @@
             float: right;
             color: #b8bfd3;
             padding-right: 8px;
+
+            transform: translateY(60%);
         }
 
         .fa-chevron-down:hover {
@@ -340,7 +349,7 @@
         }
 
         .jbl-wrapper {
-            background-color margin-left: 29px;
+            margin-left: 29px;
             background-color: #ffffff;
             border-radius: 8px;
             margin-left: 29px;
