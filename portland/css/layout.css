@@ -104,12 +104,12 @@
 
     .header-bottom-wrapper {
         height: 500px;
-        background-color: darkgrey;
+        background-color: #1c1e23;
     }
 
     .header-bottom {
         max-width: 73.125em;
-        background-color: darkgrey;
+        background-color: #1c1e23;
         margin: 0 auto;
     }
 
@@ -144,14 +144,22 @@
         float: left;
         background-color: transparent;
         border: 0px;
+        border: none;
+        outline: none;
     }
 
     .next {
         float: right;
         padding-right: 30px;
         border: 0px;
+        border: none;
         background-color: transparent;
     }
+
+    button:focus {
+        outline: 0;
+    }
+
 
 
 
