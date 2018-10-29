@@ -2,8 +2,7 @@ class Pencil {
     constructor() {
         this.element = document.getElementById("pen-tool");
     }
-    pencilFunction(event, layer) {
-        //console.log("pencil function called");
+    MouseDown(event, layer) {
         this.path = document.createElementNS(
             "http://www.w3.org/2000/svg",
             "path"
@@ -21,20 +20,18 @@ class Pencil {
         }, 1);
     }
     pencilDraw() {
-        //console.log("in pencil Draw");
         clearTimeout(this.refLoop);
         let d = this.path.getAttribute("d");
         d += "L" + cursor.x + " " + cursor.y + " ";
         this.path.setAttribute("d", d);
-        // console.log("stop is ", stop);
-
         if (!stop) {
-            //console.log("stop is in not stop", stop);
-
             this.refloop = setTimeout(() => {
                 this.pencilDraw();
             }, 1);
         }
+    }
+    MouseUp(event, layer) {
+        stop = true;
     }
 }
 
@@ -42,8 +39,7 @@ class Circle {
     constructor() {
         this.element = document.getElementById("circle-tool");
     }
-    circleFunction(event, layer) {
-        //console.log("pencil function called");
+    MouseDown(event, layer) {
         this.circle = document.createElementNS(
             "http://www.w3.org/2000/svg",
             "ellipse"
@@ -65,20 +61,44 @@ class Circle {
         }, 1);
     }
     circleDraw() {
-        //console.log("in pencil Draw");
         clearTimeout(this.refLoop);
+        let radiusX = cursor.x - prev.x;
+        let radiusY = cursor.y - prev.y;
+        let transformbyX = 0;
+        let transformbyY = 0;
+        if (radiusX < 0 && radiusY < 0) {
+            //draw mathi patti
+            radiusX = Math.abs(radiusX);
+            radiusY = Math.abs(radiusY);
+            transformbyX = -radiusX;
+            transformbyY = -radiusY;
+        }
+        if (radiusX < 0) {
+            //90 degree fip vertically
+            radiusX = Math.abs(radiusX);
+            transformbyX = -radiusX;
+        }
+        if (radiusY < 0) {
+            //90 degree flip horizontally
+            radiusY = Math.abs(radiusY);
 
-        this.circle.setAttribute("rx", cursor.x - prev.x);
-        this.circle.setAttribute("ry", cursor.y - prev.y);
-        //console.log("stop is ", stop);
+            transformbyY = -radiusY;
+        }
+        this.circle.setAttribute("rx", radiusX);
+        this.circle.setAttribute("ry", radiusY);
+        this.circle.setAttribute(
+            "transform",
+            "translate(" + transformbyX + "," + transformbyY + ")"
+        );
 
         if (!stop) {
-            //console.log("stop is in not stop", stop);
-
             this.refloop = setTimeout(() => {
                 this.circleDraw();
             }, 1);
         }
+    }
+    MouseUp(event, layer) {
+        stop = true;
     }
 }
 
@@ -86,8 +106,7 @@ class Rectangle {
     constructor() {
         this.element = document.getElementById("rect-tool");
     }
-    rectangleFunction(event, layer) {
-        //console.log("pencil function called");
+    MouseDown(event, layer) {
         this.rectangle = document.createElementNS(
             "http://www.w3.org/2000/svg",
             "rect"
@@ -108,17 +127,41 @@ class Rectangle {
             this.rectangleDraw();
         }, 1);
     }
+    MouseUp(event, layer) {
+        stop = true;
+    }
     rectangleDraw() {
-        //console.log("in pencil Draw");
         clearTimeout(this.refLoop);
+        let width = cursor.x - prev.x;
+        let height = cursor.y - prev.y;
+        let transformbyX = 0;
+        let transformbyY = 0;
+        if (width < 0 && height < 0) {
+            //draw mathi patti
+            width = Math.abs(width);
+            height = Math.abs(height);
+            transformbyX = -width;
+            transformbyY = -height;
+        }
+        if (width < 0) {
+            //90 degree fip vertically
+            width = Math.abs(width);
+            transformbyX = -width;
+        }
+        if (height < 0) {
+            //90 degree flip horizontally
+            height = Math.abs(height);
 
-        this.rectangle.setAttribute("width", cursor.x - prev.x);
-        this.rectangle.setAttribute("height", cursor.y - prev.y);
-        //console.log("stop is ", stop);
+            transformbyY = -height;
+        }
+        this.rectangle.setAttribute("width", width);
+        this.rectangle.setAttribute("height", height);
+        this.rectangle.setAttribute(
+            "transform",
+            "translate(" + transformbyX + "," + transformbyY + ")"
+        );
 
         if (!stop) {
-            //console.log("stop is in not stop", stop);
-
             this.refloop = setTimeout(() => {
                 this.rectangleDraw();
             }, 1);
@@ -130,301 +173,288 @@ class Font {
     constructor() {
         this.element = document.getElementById("font");
     }
-    fontFunction(event, layer) {
-        svgCanvas.onclick = () => {
-            let message = prompt("Text here", "");
+    MouseUp(event, layer) {
+        stop = true;
+    }
+    MouseDown(event, layer) {
+        let message = prompt("Text here", "");
 
-            this.text = document.createElementNS(
-                "http://www.w3.org/2000/svg",
-                "text"
-            );
-            // text.setAttribute("fill", "none");
-            this.text.setAttribute("stroke", this.color);
-            this.text.setAttribute("font-size", this.strokeWidth);
-            this.text.setAttribute("x", cursor.x);
-            this.text.setAttribute("y", cursor.y);
-            this.text.setAttribute("fill", defaultFill);
-            this.text.setAttribute("class", "draggable");
-            this.text.innerHTML = message;
-            layer.appendChild(this.text);
-
-            console.log("removed in this.text");
-        };
+        this.text = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "text"
+        );
+        // text.setAttribute("fill", "none");
+        this.text.setAttribute("stroke", this.color);
+        this.text.setAttribute("font-size", this.strokeWidth);
+        this.text.setAttribute("x", cursor.x);
+        this.text.setAttribute("y", cursor.y);
+        this.text.setAttribute("fill", defaultFill);
+        this.text.setAttribute("class", "draggable");
+        this.text.innerHTML = message;
+        layer.appendChild(this.text);
     }
 }
 
 class Move {
     constructor() {
         this.element = document.getElementById("hand");
+        this.selectedElement = null;
+        this.offset = { x: 0, y: 0 };
     }
-    moveFunction(evt, layer) {
-        let selectedElement = false;
-        let transform;
+    MouseUp(event, layer) {
+        //end drag
+        this.selectedElement = null;
+        //console.log("in end drag", this.selectedElement);
 
-        svgCanvas.onmousedown = () => {
-            let offsetX = cursor.x;
-            let offsetY = cursor.y;
-            console.log("offsetand cursor", offsetX, cursor);
-            // console.log("OFFFFFFFFFFFFFFFFFFFFFFFFFFFFSET", offset);
-            // console.log("in movepath", evt.target);
-            if (evt.target.classList.contains("draggable")) {
-                console.log("dragable");
+        stop = true;
+        //console.log("mouseup", stop);
+    }
+    MouseDown(evt, layer) {
+        //start drag
+        stop = false;
+        this.offset.x = cursor.x;
+        this.offset.y = cursor.y;
+        //console.log("OFFFFFFFFFFFFFFFFFFFFFFFFFFFFSET", this.offset);
 
-                this.selectedElement = evt.target;
-                console.log("selected path", this.selectedElement);
+        let target = evt.target;
+        if (target.classList.contains("quadratic-path")) {
+            // console.log("parent", target.parentNode);
+            target = target.parentNode;
+        }
+        if (target.classList.contains("draggable")) {
+            // console.log("dragable");
 
-                let transforms = this.selectedElement.transform.baseVal;
-                console.log("transforms", transforms);
+            this.selectedElement = target;
+            //console.log("selected path", this.selectedElement);
 
-                if (
-                    transforms.length === 0 ||
-                    transforms.getItem(0).type !==
-                    SVGTransform.SVG_TRANSFORM_TRANSLATE
-                ) {
-                    // Create an transform that translates by (0, 0)
-                    let translate = svgCanvas.createSVGTransform();
-                    translate.setTranslate(0, 0);
-                    // Add the translation to the front of the transforms list
-                    this.selectedElement.transform.baseVal.insertItemBefore(
-                        translate,
-                        0
-                    );
-                }
-                transform = transforms.getItem(0);
-                offsetX -= transform.matrix.e;
-                offsetY -= transform.matrix.f;
-                console.log("offsetand cursor", offsetX, cursor);
+            var transforms = this.selectedElement.transform.baseVal;
+            //console.log("transforms", transforms);
+
+            if (
+                transforms.length === 0 ||
+                transforms.getItem(0).type !==
+                SVGTransform.SVG_TRANSFORM_TRANSLATE
+            ) {
+                // Create an transform that translates by (0, 0)
+                var translate = svgCanvas.createSVGTransform();
+                translate.setTranslate(0, 0);
+                // Add the translation to the front of the transforms list
+                this.selectedElement.transform.baseVal.insertItemBefore(
+                    translate,
+                    0
+                );
             }
-            svgCanvas.addEventListener(
-                "mousemove",
-                this.drag(transform, offsetX, offsetY)
-            );
-            svgCanvas.addEventListener(
-                "mouseup",
-                this.endDrag(this.selectedElement)
-            );
-        };
-    }
 
-    drag(transform, offsetX, offsetY) {
-        console.log("in start drag");
-        console.log(offsetX, offsetY);
-        console.log(cursor.x, cursor.y);
-        transform.setTranslate(cursor.x - offsetX, cursor.y - offsetY);
-        //selectedElement.removeEventListener("mousemove", drag);
+            transform = transforms.getItem(0);
+            this.offset.x -= transform.matrix.e;
+            this.offset.y -= transform.matrix.f;
+        }
     }
-    endDrag(selectedElement) {
-        selectedElement = null;
-        svgCanvas.removeEventListener("mousemove", this.drag);
-        console.log("in end drag");
-        //svgCanvas.removeEventListener("mousedown", startDrag);
+    MouseMove() {
+        //drag
+        if (!stop) {
+            //console.log("in start drag");
+            // console.log(this.offset.x, this.offset.y);
+            //console.log(cursor.x, cursor.y);
+            transform.setTranslate(
+                cursor.x - this.offset.x,
+                cursor.y - this.offset.y
+            );
+        }
     }
 }
 
 class Curve {
     constructor() {
         this.element = document.getElementById("curve-tool");
+        this.draggingAreaToMove = null;
+        this.circleToMove = null;
+        this.groupToMove = null;
+        this.indexToMove = 0;
+        this.pathToRedraw = null;
+        this.pointsCounter = 0;
+        this.firstBezierPoint = {
+            x: 0,
+            y: 0
+        };
+        this.midpoint = {
+            x: 0,
+            y: 0
+        };
     }
-    curveFunction(event, layer) {
-        this.mouseDown(event, layer);
-    }
-    mouseDown(evt, layer) {
+
+    MouseDown(evt, layer) {
         // console.log("in mouse doen in curve");
 
         if (evt.target.classList[0] === "dragging") {
-            console.log("in dragging ");
-            svgCanvas.removeEventListener("click", this.mouseClick(evt, layer));
-            console.log("in dragging  removed click");
-            let draggingAreaToMove = evt.target;
-            let circleToMove = draggingAreaToMove.previousElementSibling;
+            //console.log("in dragging ");
+            click = false;
+            // console.log("in dragging  removed click", click);
+            this.draggingAreaToMove = evt.target;
+            this.circleToMove = this.draggingAreaToMove.previousElementSibling;
 
-            let groupToMove = evt.target.parentNode;
-            let child = groupToMove.childNodes;
-            let indexToMove = 3;
-            for (let i = 0; i < groupToMove.childNodes.length; i++) {
-                if (circleToMove === child[i]) {
+            this.groupToMove = evt.target.parentNode;
+            let child = this.groupToMove.childNodes;
+            this.indexToMove = 3;
+            for (let i = 0; i < this.groupToMove.childNodes.length; i++) {
+                if (this.circleToMove === child[i]) {
                     //get the index of the path to move
-                    indexToMove = i - 1;
-                    console.log("index to move ", indexToMove);
+                    this.indexToMove = i - 1;
+                    //console.log("index to move ", this.indexToMove);
                 }
             }
 
-            if (groupToMove.getElementsByClassName("first-marker")[0]) {
-                console.log("path t redraw");
-                this.pathToRedraw = child[indexToMove];
+            if (this.groupToMove.getElementsByClassName("first-marker")[0]) {
+                //console.log("path t redraw");
+                this.pathToRedraw = child[this.indexToMove];
             }
-            svgCanvas.addEventListener(
-                "mousemove",
-                this.movePoint(
-                    evt,
-                    draggingAreaToMove,
-                    circleToMove,
-                    this.pathToRedraw
-                )
-            );
-            svgCanvas.addEventListener(
-                "mouseup",
-                this.mouseUp(
-                    evt,
-                    circleToMove,
-                    draggingAreaToMove,
-                    this.pathToRedraw
-                )
+            moveCp = true;
+        } else {
+            click = true;
+            //console.log("inelse so made true", click);
+        }
+    }
+    MouseUp(evt, layer) {
+        stop = true;
+        console.log("in mouseup", click);
+
+        this.circleToMove.style.fill = "none";
+
+        //click = false;
+        moveCp = false;
+        //console.log("after making false ", click);
+    }
+    MouseMove(evt, layer) {
+        if (moveCp) {
+            console.log("move Point", this.draggingAreaToMove);
+
+            this.draggingAreaToMove.setAttribute("cx", cursor.x);
+            this.draggingAreaToMove.setAttribute("cy", cursor.y);
+            //console.log("move Point", this.draggingAreaToMove);
+            this.circleToMove.setAttribute("cx", cursor.x);
+            this.circleToMove.setAttribute("cy", cursor.y);
+            //console.log("move Point", this.circleToMove);
+            this.circleToMove.style.fill = "#49c";
+
+            this.redrawPath(
+                this.pathToRedraw,
+                cursor,
+                this.circleToMove.getAttribute("class")
             );
         }
-        svgCanvas.addEventListener("click", this.mouseClick(evt, layer));
-
-        //console.log("emoved svg canvas read in ebzier curve");
-    }
-    mouseUp(evt, circleToMove, draggingAreaToMove, pathToRedraw) {
-        console.log("in mouseup");
-
-        circleToMove.style.fill = "none";
-
-        svgCanvas.removeEventListener(
-            "mousemove",
-            this.movePoint(evt, draggingAreaToMove, circleToMove, pathToRedraw)
-        );
-        svgCanvas.removeEventListener(
-            "mouseup",
-            this.mouseUp(evt, circleToMove, draggingAreaToMove, pathToRedraw)
-        );
-        console.log("removed mouseup and move");
-        svgCanvas.removeEventListener("click", this.mouseClick(evt, layer));
-        console.log("removed click");
-    }
-    movePoint(evt, draggingAreaToMove, circleToMove, pathToRedraw) {
-        //console.log("move Point", draggingAreaToMove);
-
-        draggingAreaToMove.setAttribute("cx", cursor.x);
-        draggingAreaToMove.setAttribute("cy", cursor.y);
-        console.log("move Point", draggingAreaToMove);
-        circleToMove.setAttribute("cx", cursor.x);
-        circleToMove.setAttribute("cy", cursor.y);
-        console.log("move Point", circleToMove);
-        circleToMove.style.fill = "#49c";
-
-        this.redrawPath(
-            pathToRedraw,
-            cursor,
-            circleToMove.getAttribute("class")
-        );
     }
 
-    mouseClick(evt, layer) {
-        console.log("click", clickcount);
-        clickcount++;
-        svgCanvas.removeEventListener("click", this.mouseClick);
-        //console.log("removed click");
+    MouseClick(evt, layer) {
+        if (click) {
+            click = false;
 
-        switch (pointsCounter) {
-            case 0:
-                // Create new group of points
-                if (document.getElementById("currentGroup")) {
-                    document
-                        .getElementById("currentGroup")
-                        .removeAttribute("id");
-                }
-                let myGroup = document.createElementNS(
-                    "http://www.w3.org/2000/svg",
-                    "g"
-                );
-
-                myGroup.setAttribute("id", "currentGroup");
-                myGroup.setAttribute("class", "draggable");
-                console.log("layer", layer);
-                layer.appendChild(myGroup);
-                // Draw first point and add it to the current group
-                this.drawPoint(cursor.x, cursor.y, "first-anchor");
-                prev.x = cursor.x;
-                prev.y = cursor.y;
-                firstBezierPoint.x = cursor.x;
-                firstBezierPoint.y = cursor.y;
-                pointsCounter++;
-                break;
-            case 1:
-                // Draw second point
-                this.drawPoint(cursor.x, cursor.y, "second-anchor");
-
-                midpoint.x = (cursor.x + prev.x) / 2;
-                midpoint.y = (cursor.y + prev.y) / 2;
-                //draw control point
-
-                //draw path
-                this.drawPathQuadratic(
-                    prev.x,
-                    prev.y,
-                    midpoint.x,
-                    midpoint.y,
-                    cursor.x,
-                    cursor.y,
-                    "quadratic-path"
-                );
-                this.drawPoint(
-                    (cursor.x + prev.x) / 2,
-                    (cursor.y + prev.y) / 2,
-                    "first-marker"
-                );
-                //draw draggaalbe control point
-                this.drawPoint(
-                    (cursor.x + prev.x) / 2,
-                    (cursor.y + prev.y) / 2,
-                    "dragging"
-                );
-
-                prev.x = cursor.x;
-                prev.y = cursor.y;
-                //check if the endpoint is near to 1st point
-                if (
-                    Math.abs(cursor.x - firstBezierPoint.x) < 5 &&
-                    Math.abs(cursor.y - firstBezierPoint.y) < 5
-                ) {
-                    console.log(
-                        "EWUAL BHAYO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-                    );
-                    let lencircle = document
-                        .getElementById("currentGroup")
-                        .getElementsByTagName("circle").length;
-                    //console.log(lencircle);
-                    for (let i = 0; i < lencircle; i++) {
-                        //remove all dots to form group
+            switch (this.pointsCounter) {
+                case 0:
+                    // Create new group of points
+                    if (document.getElementById("currentGroup")) {
                         document
                             .getElementById("currentGroup")
-                            .removeChild(
-                                document
-                                .getElementById("currentGroup")
-                                .getElementsByTagName("circle")[0]
-                            );
+                            .removeAttribute("id");
                     }
-                    let myPath = document.createElementNS(
+                    let myGroup = document.createElementNS(
                         "http://www.w3.org/2000/svg",
-                        "path"
+                        "g"
                     );
-                    let g = document.getElementById("currentGroup");
-                    let data =
-                        "M" +
-                        firstBezierPoint.x +
-                        " " +
-                        firstBezierPoint.y +
-                        " " +
-                        "L " +
-                        cursor.x +
-                        " " +
-                        cursor.y +
-                        " ";
 
-                    myPath.setAttribute("d", data);
-                    myPath.setAttribute("fill", defaultFill);
-                    myPath.setAttribute("class", "linear-path");
-                    g.appendChild(myPath);
+                    myGroup.setAttribute("id", "currentGroup");
+                    myGroup.setAttribute("class", "draggable");
+                    //console.log("layer", layer);
+                    layer.appendChild(myGroup);
+                    // Draw first point and add it to the current group
+                    this.drawPoint(cursor.x, cursor.y, "first-anchor");
+                    prev.x = cursor.x;
+                    prev.y = cursor.y;
+                    this.firstBezierPoint.x = cursor.x;
+                    this.firstBezierPoint.y = cursor.y;
+                    this.pointsCounter++;
+                    break;
+                case 1:
+                    // Draw second point
+                    this.drawPoint(cursor.x, cursor.y, "second-anchor");
 
-                    //set to draw a new path
-                    pointsCounter = 0;
-                }
+                    this.midpoint.x = (cursor.x + prev.x) / 2;
+                    this.midpoint.y = (cursor.y + prev.y) / 2;
+                    //draw control point
 
-                break;
+                    //draw path
+                    this.drawPathQuadratic(
+                        prev.x,
+                        prev.y,
+                        this.midpoint.x,
+                        this.midpoint.y,
+                        cursor.x,
+                        cursor.y,
+                        "quadratic-path"
+                    );
+                    this.drawPoint(
+                        (cursor.x + prev.x) / 2,
+                        (cursor.y + prev.y) / 2,
+                        "first-marker"
+                    );
+                    //draw draggaalbe control point
+                    this.drawPoint(
+                        (cursor.x + prev.x) / 2,
+                        (cursor.y + prev.y) / 2,
+                        "dragging"
+                    );
+
+                    prev.x = cursor.x;
+                    prev.y = cursor.y;
+                    //check if the endpoint is near to 1st point
+                    if (
+                        Math.abs(cursor.x - this.firstBezierPoint.x) < 5 &&
+                        Math.abs(cursor.y - this.firstBezierPoint.y) < 5
+                    ) {
+                        let lencircle = document
+                            .getElementById("currentGroup")
+                            .getElementsByTagName("circle").length;
+                        //console.log(lencircle);
+                        for (let i = 0; i < lencircle; i++) {
+                            //remove all dots to form group
+                            document
+                                .getElementById("currentGroup")
+                                .removeChild(
+                                    document
+                                    .getElementById("currentGroup")
+                                    .getElementsByTagName("circle")[0]
+                                );
+                        }
+                        let myPath = document.createElementNS(
+                            "http://www.w3.org/2000/svg",
+                            "path"
+                        );
+                        let g = document.getElementById("currentGroup");
+                        let data =
+                            "M" +
+                            this.firstBezierPoint.x +
+                            " " +
+                            this.firstBezierPoint.y +
+                            " " +
+                            "L " +
+                            cursor.x +
+                            " " +
+                            cursor.y +
+                            " ";
+
+                        myPath.setAttribute("d", data);
+                        myPath.setAttribute("fill", defaultFill);
+                        myPath.setAttribute("class", "linear-path");
+                        g.appendChild(myPath);
+
+                        //set to draw a new path
+                        this.pointsCounter = 0;
+                    }
+
+                    break;
+            }
         }
     }
+
     drawPoint(x, y, classToSet) {
         let myCircle = document.createElementNS(
             "http://www.w3.org/2000/svg",

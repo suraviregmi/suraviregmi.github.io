@@ -6,17 +6,20 @@ downloadButton.addEventListener("click", event => {
     function svgDataURL(svg) {
         console.log("in svg data url");
         var svgAsXML = new XMLSerializer().serializeToString(svg);
+        //to remove fill white
+        svgAsXML = svgAsXML.replace(/transparent/g, "");
+        console.log(svgAsXML);
         return "data:image/svg+xml," + encodeURIComponent(svgAsXML);
     }
 
     function download() {
-        console.log("in download ");
+        // console.log("in download ");
         var dl = document.createElement("a");
         document.body.appendChild(dl); // This line makes it work in Firefox.
-        console.log("svg canvs is what", svgCanvas);
+        //console.log("svg canvs is what", svgCanvas);
         dl.setAttribute("href", svgDataURL(svgCanvas));
         dl.setAttribute("download", "test.svg");
-        console.log("dl is ", dl);
+        // console.log("dl is ", dl);
         dl.click();
     }
 });
