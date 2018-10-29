@@ -211,15 +211,35 @@ class Move {
     }
     MouseDown(evt, layer) {
         //start drag
+        let notcomplete = false;
         stop = false;
         this.offset.x = cursor.x;
         this.offset.y = cursor.y;
         //console.log("OFFFFFFFFFFFFFFFFFFFFFFFFFFFFSET", this.offset);
 
         let target = evt.target;
+        //to check bezier path
         if (target.classList.contains("quadratic-path")) {
-            // console.log("parent", target.parentNode);
-            target = target.parentNode;
+            parent = target.parentNode;
+            let childrenss = parent.children;
+            //check if path is complete
+            for (let i = 0; i < childrenss.length; i++) {
+                if (
+                    childrenss[i].classList.contains(
+                        "first-anchor" ||
+                        "second-anchor" ||
+                        "first-marker" ||
+                        "dragging"
+                    )
+                ) {
+                    notcomplete = true;
+                }
+            }
+            if (notcomplete) {
+                target = null;
+            } else {
+                target = target.parentNode;
+            }
         }
         if (target.classList.contains("draggable")) {
             // console.log("dragable");
@@ -326,7 +346,7 @@ class Curve {
     }
     MouseMove(evt, layer) {
         if (moveCp) {
-            console.log("move Point", this.draggingAreaToMove);
+            //console.log("move Point", this.draggingAreaToMove);
 
             this.draggingAreaToMove.setAttribute("cx", cursor.x);
             this.draggingAreaToMove.setAttribute("cy", cursor.y);
