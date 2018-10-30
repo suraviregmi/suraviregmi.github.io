@@ -11,17 +11,10 @@ body {
     max-width: 80.25em;
 }
 
-.color-bar {
-    cursor: pointer;
-    width: 15em;
-    height: 15em;
-}
-
 .top-menu {
-    height: 48px;
-
     width: 100%;
     font-size: 16px;
+    height: 35px;
     display: flex;
     z-index: 2;
     background-color: #323330;
@@ -32,12 +25,12 @@ body {
     display: inline-block;
     padding: 0 20px;
     color: #49c;
-    line-height: 48px;
+    line-height: 35px;
     cursor: pointer;
 }
 
 .menu-button {
-    line-height: 48px;
+    line-height: 35px;
     padding: 0 10px;
     color: #cbcbcb;
     outline: none;
@@ -79,7 +72,7 @@ body {
 }
 
 hr {
-    border: 0.5px solid #41423E;
+    border: 0.5px solid #626566;
 }
 
 .sub-menu-item a:hover {
@@ -102,7 +95,7 @@ hr {
 .left-menu {
     width: 50px;
     float: left;
-    padding: 70px 0;
+    padding: 95px 0;
     background-color: #545454;
     font-size: 24px;
 }
@@ -120,8 +113,9 @@ hr {
     width: 95.744680851%;
     height: 500px;
     margin: 20px;
+    border: 1px solid #ffffff;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
 }
-
 
 #SVG {
 
@@ -153,24 +147,15 @@ hr {
 }
 
 .right-menu {
-    /*    min-width: 244px;*/
-    min-width: 19.0031153%;
+
+    min-width: 16.666666667%;
     float: left;
-    margin: 0 25px;
+    margin: 0 35px;
     background-color: #323330;
 }
 
 .leftCol {
     width: 100%;
-}
-
-.transparentColor {
-    line-height: 30px;
-    padding: 0px 20px;
-    color: #000;
-    cursor: pointer;
-    background-color: #fff;
-    border-bottom: 1px solid #000;
 }
 
 .layer-tab button:hover {
@@ -179,7 +164,7 @@ hr {
 
 .layer-tab button {
     color: #cbcbcb;
-    margin: 5px 18px;
+    margin: 5px 9px;
     height: 40px;
     width: 40px;
     font: inherit;
@@ -194,7 +179,7 @@ hr {
     color: #000;
     float: left;
     line-height: 30px;
-    width: 17em;
+    width: 82.242990654%;
     font-size: 12px;
     text-align: center;
     cursor: pointer;
@@ -208,7 +193,7 @@ hr {
     float: left;
     color: #fff;
     line-height: 30px;
-    width: 17em;
+    width: 82.242990654%;
     font-size: 12px;
     text-align: center;
     cursor: pointer;
@@ -268,10 +253,7 @@ hr {
 
 .dropdown-btn,
 .downloadbtn {
-    /*  width: 240px;*/
-    /* width: calc(100% - 4px);*/
-    width: 100%;
-
+    width: 214px;
     line-height: 28px;
 
     padding: 6px 8px 6px 16px;
@@ -296,7 +278,7 @@ hr {
     border-bottom: 2px solid #494949;
     border-right: 2px solid #494949;
     display: none;
-    width: 15em;
+    width: 210px;
     background-color: #323330;
 }
 
@@ -321,9 +303,8 @@ ul {
 
 input[type=range] {
     margin: 20px 0 20px 10px;
-    width: 15em;
+    width: 80.476190476%;
     border-radius: 5px;
-    cursor: pointer;
     -webkit-appearance: none;
 }
 
@@ -366,76 +347,6 @@ input[type=range]::-webkit-slider-runnable-track {
 
     font-size: 16px;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

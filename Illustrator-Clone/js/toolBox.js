@@ -6,6 +6,7 @@ class ToolBox {
         this.font = new Font();
         this.curve = new Curve();
         this.move = new Move();
+        this.bucket = new Bucket();
 
         this.currentTool = this.pencil;
 
@@ -39,6 +40,11 @@ class ToolBox {
             this.currentTool = this.move;
             this.currentTool.element.setAttribute("class", "activeTool");
         };
+        this.bucket.element.onclick = event => {
+            this.resetToolBox();
+            this.currentTool = this.bucket;
+            this.currentTool.element.setAttribute("class", "activeTool");
+        };
     }
     resetToolBox() {
         this.pencil.element.setAttribute("class", "inactiveTool");
@@ -47,5 +53,6 @@ class ToolBox {
         this.font.element.setAttribute("class", "inactiveTool");
         this.curve.element.setAttribute("class", "inactiveTool");
         this.move.element.setAttribute("class", "inactiveTool");
+        this.bucket.element.setAttribute("class", "inactiveTool");
     }
 }

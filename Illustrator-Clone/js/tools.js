@@ -35,6 +35,56 @@ class Pencil {
     }
 }
 
+class Bucket {
+    constructor() {
+        this.element = document.getElementById("bucket");
+        this.selectedElement = null;
+    }
+    MouseDown(evt, layer) {
+        stop = false;
+        let notcomplete = false;
+        defaultFill = this.color;
+        console.log(defaultFill);
+        let target = evt.target;
+        //to check bezier path
+        if (target.classList.contains("quadratic-path")) {
+            let parent = target.parentNode;
+            let childrenss = parent.children;
+            //check if path is complete
+            for (let i = 0; i < childrenss.length; i++) {
+                if (
+                    childrenss[i].classList.contains(
+                        "first-anchor" ||
+                        "second-anchor" ||
+                        "first-marker" ||
+                        "dragging"
+                    )
+                ) {
+                    notcomplete = true;
+                }
+            }
+            if (notcomplete) {
+                target = null;
+            } else {
+                target = target.parentNode;
+            }
+        }
+        if (target.classList.contains("draggable")) {
+            console.log("dragable");
+
+            this.selectedElement = target;
+            console.log("selected path", this.selectedElement);
+
+            this.selectedElement.setAttribute("fill", defaultFill);
+            console.log("selected path", this.selectedElement);
+        }
+    }
+    MouseUp(event, layer) {
+        stop = true;
+        this.selectedElement = null;
+    }
+}
+
 class Circle {
     constructor() {
         this.element = document.getElementById("circle-tool");
@@ -111,8 +161,8 @@ class Rectangle {
             "http://www.w3.org/2000/svg",
             "rect"
         );
+
         this.rectangle.setAttribute("fill", defaultFill);
-        //this.rectangle.setAttribute("fill", "none");
         this.rectangle.setAttribute("draggable", "true");
         this.rectangle.setAttribute("stroke", this.color);
         this.rectangle.setAttribute("stroke-width", this.strokeWidth);
@@ -177,6 +227,7 @@ class Font {
         stop = true;
     }
     MouseDown(event, layer) {
+        //console.log("mousedown called");
         let message = prompt("Text here", "");
 
         this.text = document.createElementNS(
@@ -220,7 +271,7 @@ class Move {
         let target = evt.target;
         //to check bezier path
         if (target.classList.contains("quadratic-path")) {
-            parent = target.parentNode;
+            let parent = target.parentNode;
             let childrenss = parent.children;
             //check if path is complete
             for (let i = 0; i < childrenss.length; i++) {

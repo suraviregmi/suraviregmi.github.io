@@ -12,6 +12,8 @@ class MainPainter {
             // console.log("add layer");
             // console.log(svgContainer);
             svgContainer.style.backgroundColor = "white";
+            svgContainer.style.boxShadow = "0px 2px 4px rgba(0, 0, 0, 0.25)";
+
             let layer = new LayerElement(this.canvases.length);
             leftCol.appendChild(layer.element);
             svgCanvas.appendChild(layer.canvasLayer);
@@ -136,6 +138,7 @@ class MainPainter {
             }
             if (this.canvases.length === 0) {
                 svgContainer.style.backgroundColor = "transparent";
+                svgContainer.style.boxShadow = "none";
             }
         });
 
@@ -162,6 +165,7 @@ class MainPainter {
             leftCol.innerHTML = "";
             svgCanvas.innerHTML = "";
             svgContainer.style.backgroundColor = "transparent";
+            svgContainer.style.boxShadow = "none";
         });
 
         //merge layers
