@@ -413,7 +413,7 @@ all centre image displays*/
 
     .p-arrow img {
 
-        margin: calc(50% - 5px);
+        margin: 0 calc(50% - 5px);
         ;
     }
 
